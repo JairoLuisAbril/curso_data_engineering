@@ -37,14 +37,23 @@ sources:
             tests:
               - unique
               - not_null
-                  
           - name: page_url
           - name: event_type
+            tests:
+              - not_null
           - name: user_id
+            tests:
+              - not_null
           - name: product_id
+            tests:
+              - not_null
           - name: session_id
+            tests:
+              - not_null
           - name: created_at
           - name: order_id
+            tests:
+              - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
@@ -55,32 +64,33 @@ sources:
               - unique
               - not_null
           - name: shipping_service
+            tests:
+              - aceppted_values:
+                  values: ['ups','fedex','dhl','usps','undefined']
           - name: shipping_cost
+            tests:
+              - positive_values
           - name: address_id
             tests:
-              - unique
               - not_null
-          - name: created_id
+          - name: created_at
             tests:
-              - unique
               - not_null
           - name: promo_id
-            tests:
-              - unique
-              - not_null
           - name: estimated_delivery_at
           - name: order_cost
+            tests:
+              - positive_values
           - name: user_id
             tests:
-              - unique
               - not_null
           - name: order_total
             tests:
               - not_null
+              - positive_values
           - name: delivered_at
           - name: tracking_id
             tests:
-              - unique
               - not_null
           - name: status
           - name: _fivetran_deleted
@@ -90,9 +100,10 @@ sources:
         columns:
           - name: order_id
             tests:
-              - unique
               - not_null
           - name: product_id
+            tests:
+              - not_null
           - name: quantity
             tests:
               - positive_values
@@ -133,7 +144,6 @@ sources:
           - name: update_at
           - name: address_id
             tests:
-              - unique
               - not_null
           - name: last_name
           - name: created_at

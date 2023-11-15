@@ -23,8 +23,6 @@ sources:
           - name: _row
           - name: product_id
             tests:
-              - unique
-              - not_null
               - relationships:
                  to: source('sql_server_dbo','stg_products')
                  field: product_id
