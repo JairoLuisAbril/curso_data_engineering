@@ -22,6 +22,9 @@ sources:
       - name: addresses
         columns:
           - name: address_id
+            tests:
+              - unique
+              - not_null
           - name: zipcode
           - name: country
           - name: address
@@ -31,6 +34,10 @@ sources:
       - name: events
         columns:
           - name: event_id
+            tests:
+              - unique
+              - not_null
+                  
           - name: page_url
           - name: event_type
           - name: user_id
@@ -44,17 +51,37 @@ sources:
       - name: orders
         columns:
           - name: order_id
+            tests:
+              - unique
+              - not_null
           - name: shipping_service
           - name: shipping_cost
           - name: address_id
+            tests:
+              - unique
+              - not_null
           - name: created_id
+            tests:
+              - unique
+              - not_null
           - name: promo_id
+            tests:
+              - unique
+              - not_null
           - name: estimated_delivery_at
           - name: order_cost
           - name: user_id
+            tests:
+              - unique
+              - not_null
           - name: order_total
+            tests:
+              - not_null
           - name: delivered_at
           - name: tracking_id
+            tests:
+              - unique
+              - not_null
           - name: status
           - name: _fivetran_deleted
           - name: _fivetran_synced
@@ -62,15 +89,25 @@ sources:
       - name: order_items
         columns:
           - name: order_id
+            tests:
+              - unique
+              - not_null
           - name: product_id
           - name: quantity
+            tests:
+              - positive_values
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
       - name: products
         columns:
           - name: product_id
+            tests:
+              - unique
+              - not_null
           - name: price
+            tests:
+              - positive_values
           - name: name
           - name: inventory
           - name: _fivetran_deleted
@@ -79,6 +116,9 @@ sources:
       - name: promos
         columns:
           - name: promo_id
+            tests:
+              - unique
+              - not_null
           - name: discount
           - name: status
           - name: _fivetran_deleted
@@ -87,8 +127,14 @@ sources:
       - name: users
         columns:
           - name: user_id
+            tests:
+              - unique
+              - not_null
           - name: update_at
           - name: address_id
+            tests:
+              - unique
+              - not_null
           - name: last_name
           - name: created_at
           - name: phone_number

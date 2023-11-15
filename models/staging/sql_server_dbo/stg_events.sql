@@ -12,13 +12,13 @@ WITH src_events AS (
 renamed_casted AS (
     SELECT
           event_id
-        , page_url
         , event_type
+        , order_id
         , user_id
         , product_id
         , session_id
         , created_at
-        , order_id
+        , page_url
         , _fivetran_synced AS date_load
     FROM src_events
     )

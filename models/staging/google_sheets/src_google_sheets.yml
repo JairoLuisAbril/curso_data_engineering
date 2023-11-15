@@ -22,6 +22,14 @@ sources:
         columns:
           - name: _row
           - name: product_id
+            tests:
+              - unique
+              - not_null
+              - relationships:
+                 to: source('sql_server_dbo','stg_products')
+                 field: product_id
           - name: quantity
+            tests:
+              - positive_values
           - name: month
           - name: _fivetran_synced

@@ -13,18 +13,18 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
           order_id
-        , shipping_service
-        , shipping_cost
-        , address_id
+        ,tracking_id
+        , user_id 
         , created_at
-        , promo_id
+        , address_id
         , estimated_delivery_at
-        , order_cost
-        , user_id
-        , order_total
         , delivered_at 
-        , tracking_id
+        , shipping_service
         , status
+        , promo_id
+        , shipping_cost
+        , order_cost
+        , order_total
         , _fivetran_synced AS date_load
     FROM src_orders
     )
