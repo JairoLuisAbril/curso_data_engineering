@@ -11,7 +11,8 @@ WITH src_promos AS (
 
 renamed_casted AS (
     SELECT
-          promo_id
+        dbt_utils.generate_surrogate_key(promo_id)as primary_key 
+        ,  promo_id AS name_promo
         , discount
         , status
         , _fivetran_synced AS date_load

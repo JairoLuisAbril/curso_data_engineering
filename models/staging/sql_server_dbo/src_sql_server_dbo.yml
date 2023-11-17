@@ -65,8 +65,8 @@ sources:
               - not_null
           - name: shipping_service
             tests:
-              - aceppted_values:
-                  values: ['ups','fedex','dhl','usps','undefined']
+              - accepted_values: 
+                  values: ['ups','fedex','dhl','usps','']
           - name: shipping_cost
             tests:
               - positive_values
@@ -77,22 +77,29 @@ sources:
             tests:
               - not_null
           - name: promo_id
+            tests:
+              - not_null
           - name: estimated_delivery_at
           - name: order_cost
+            data_type: float
             tests:
               - positive_values
           - name: user_id
+            data_type: varchar
             tests:
               - not_null
           - name: order_total
+            data_type: float
             tests:
               - not_null
               - positive_values
           - name: delivered_at
           - name: tracking_id
+            data_type: varchar
             tests:
               - not_null
           - name: status
+            data_type: varchar
           - name: _fivetran_deleted
           - name: _fivetran_synced
           
