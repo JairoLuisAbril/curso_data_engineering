@@ -21,6 +21,9 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: _row
+            tests:
+              - unique
+              - not_null
           - name: product_id
             tests:
               - relationships:
@@ -30,4 +33,6 @@ sources:
             tests:
               - positive_values
           - name: month
+            tests:
+              - not_null
           - name: _fivetran_synced

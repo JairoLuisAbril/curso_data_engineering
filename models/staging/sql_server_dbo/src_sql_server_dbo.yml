@@ -26,8 +26,14 @@ sources:
               - unique
               - not_null
           - name: zipcode
+            tests:
+              - not_null
           - name: country
+            tests:
+              - not_null
           - name: address
+            tests:
+              - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
@@ -38,6 +44,8 @@ sources:
               - unique
               - not_null
           - name: page_url
+            tests:
+              - not_null
           - name: event_type
             tests:
               - not_null
@@ -51,11 +59,14 @@ sources:
             tests:
               - not_null
           - name: created_at
+            tests:
+              - not_null
           - name: order_id
             tests:
               - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
+
 
       - name: orders
         columns:
@@ -70,6 +81,7 @@ sources:
           - name: shipping_cost
             tests:
               - positive_values
+              - not_null
           - name: address_id
             tests:
               - not_null
@@ -78,28 +90,26 @@ sources:
               - not_null
           - name: promo_id
             tests:
-              - not_null
+              - accepted_values:
+                  values: ['task-force','instruction set','leverage','Optional','Mandatory','Digitized','']
           - name: estimated_delivery_at
           - name: order_cost
-            data_type: float
             tests:
+              - not_null
               - positive_values
           - name: user_id
-            data_type: varchar
             tests:
               - not_null
           - name: order_total
-            data_type: float
             tests:
               - not_null
               - positive_values
           - name: delivered_at
           - name: tracking_id
-            data_type: varchar
-            tests:
-              - not_null
           - name: status
-            data_type: varchar
+            tests:
+              - accepted_values:
+                  values: ['delivered','preparing','shipped']
           - name: _fivetran_deleted
           - name: _fivetran_synced
           
@@ -110,6 +120,9 @@ sources:
               - not_null
           - name: product_id
             tests:
+              - relationships:
+                 to: source('sql_server_dbo','stg_products')
+                 field: product_id
               - not_null
           - name: quantity
             tests:
@@ -126,8 +139,14 @@ sources:
           - name: price
             tests:
               - positive_values
+              - not_null
           - name: name
+            tests:
+              - not_null
           - name: inventory
+            tests:
+              - positive_values
+              - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
@@ -138,7 +157,12 @@ sources:
               - unique
               - not_null
           - name: discount
+            tests:
+              - positive_values
           - name: status
+            tests:
+              - accepted_values:
+                  values: ['inactive','active']
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
@@ -148,15 +172,27 @@ sources:
             tests:
               - unique
               - not_null
-          - name: update_at
+          - name: updated_at
+            tests:
+              - not_null
           - name: address_id
             tests:
               - not_null
           - name: last_name
+            tests:
+              - not_null
           - name: created_at
+            tests:
+              - not_null
           - name: phone_number
+            tests:
+              - not_null
           - name: total_orders
           - name: first_name
+            tests:
+              - not_null
           - name: email
+            tests:
+              - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
