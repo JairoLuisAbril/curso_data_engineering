@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='table'
+    materialized='view'
   )
 }}
 
@@ -11,10 +11,10 @@ WITH src_products AS (
 
 renamed_casted AS (
     SELECT
-          product_id
-        , name
-        , price
-        , inventory
+          product_id::varchar(128) AS product_id 
+        , name::varchar(64) AS name_products 
+        , price::float AS price_products
+        , inventory::integer AS inventory_products
         , _fivetran_synced AS date_load
     FROM src_products
     )

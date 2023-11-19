@@ -1,0 +1,276 @@
+version: 2
+
+sources:
+
+  - name: stg_sql_server_dbo # name of the source 
+    schema: dbt # this is the schema our raw data lives in
+    database: ALUMNO10_DEV_SILVER_DB # this is the name of our database
+    
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 32, period: day}
+      error_after: {count: 33, period: day}
+
+
+    tables:
+
+      - name: stg_addresses
+        description: ""
+        columns:
+        - name: address_id
+          data_type: varchar
+          description: ""
+          tests:
+                - unique
+                - not_null
+        - name: address
+          data_type: varchar
+          description: ""
+          tests:
+            - not_null
+        - name: zipcode
+          data_type: number
+          description: ""
+          tests:
+            - not_null
+        - name: state
+          data_type: varchar
+          description: ""
+          tests:
+            - not_null
+        - name: country
+          data_type: varchar
+          description: ""
+          tests:
+            - not_null
+        - name: date_loaded
+          data_type: timestamp_tz
+          description: ""
+
+      - name: stg_events
+        description: ""
+        columns:
+          - name: event_id
+            data_type: varchar
+            description: ""
+            tests:
+                  - unique
+                  - not_null
+          - name: event_type
+            data_type: varchar
+            description: ""
+          - name: user_id
+            data_type: varchar
+            description: ""
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_users')
+                  field: user_id
+          - name: session_id
+            data_type: varchar
+            description: ""
+          - name: page_url
+            data_type: varchar
+            description: ""
+          - name: order_id
+            data_type: varchar
+            description: ""
+            tests:
+              - relationships:
+                  to: ref('stg_orders')
+                  field: order_id
+          - name: product_id
+            data_type: varchar
+            description: ""
+            tests:
+              - not_null 
+              - relationships:
+                  to: ref('stg_products')
+                  field: product_id
+          - name: created_at
+            data_type: timestamp_ntz
+            description: ""
+          - name: date_loaded
+            data_type: timestamp_tz
+            description: ""
+
+      - name: stg_order_items
+        description: ""
+        columns:
+          - name: order_id
+            data_type: varchar
+            description: ""
+            tests: 
+              - not_null
+              - relationships:
+                  to: ref('stg_orders')
+                  field: order_id
+          - name: product_id
+            data_type: varchar
+            description: ""
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_sql_products')
+                  field: product_id
+          - name: quantity
+            data_type: number
+            description: ""
+            tests:
+              - not_null
+              - positive_values
+          - name: date_loaded
+            data_type: timestamp_tz
+            description: ""
+
+      - name: stg_orders
+        description: ""
+        columns:
+          - name: order_id
+            data_type: varchar
+            description: ""
+          - name: user_id
+            data_type: varchar
+            description: ""
+          - name: address_id
+            data_type: varchar
+            description: ""
+          - name: tracking_id
+            data_type: varchar
+            description: ""
+            tests:
+              - not_null
+          - name: created_at_date
+            data_type: timestamp_tz
+            description: ""
+          - name: created_at_time
+            data_type: timestamp_tz
+            description: ""
+          - name: estimated_delivery_at_date
+            data_type: timestamp_tz
+            description: ""
+          - name: estimated_delivery_at_time
+            data_type: timestamp_tz
+            description: ""
+          - name: delivered_at_date
+            data_type: timestamp_tz
+            description: ""
+          - name: delivered_at_time
+            data_type: timestamp_tz
+            description: ""
+          - name: status
+            data_type: varchar
+            description: ""
+          - name: shipping_service
+            data_type: varchar
+            description: ""
+            tests:
+              - accepted_values: 
+                  values: ['ups','fedex','dhl','usps','undefined']
+          - name: promo_name
+            data_type: varchar
+            description: ""
+          - name: promo_id
+            data_type: varchar
+            description: ""
+          - name: shipping_cost
+            data_type: float
+            description: ""  
+          - name: order_cost
+            data_type: float
+            description: ""
+          - name: order_total
+            data_type: float
+            description: ""
+          - name: date_loaded            
+            data_type: timestamp_tz
+            description: ""
+
+      - name: stg_products
+        description: ""
+        columns:
+          - name: product_id
+            data_type: varchar
+            description: ""
+            tests:
+                  - unique 
+                  - not_null
+          - name: name
+            data_type: varchar
+            description: ""
+          - name: price
+            data_type: float
+            description: ""
+            tests:
+                  - not_null
+                  - positive_values
+          - name: inventory
+            data_type: number
+            description: ""
+            tests:
+                  - not_null
+                  - positive_values
+          - name: date_loaded
+            data_type: timestamp_tz
+            description: ""
+
+      - name: stg_promos
+        description: ""
+        columns:
+          - name: promo_id
+            data_type: varchar
+            description: ""
+            tests:
+                  - unique 
+                  - not_null
+          - name: discount
+            data_type: number
+            description: ""
+            tests:
+                  - not_null
+                  - positive_values
+          - name: status
+            data_type: varchar
+            description: ""
+          - name: date_loaded
+            data_type: timestamp_tz
+            description: ""
+
+      - name: stg_users
+        description: ""
+        columns:
+          - name: user_id
+            data_type: varchar
+            description: ""
+            tests:
+                  - unique 
+                  - not_null
+          - name: first_name
+            data_type: varchar
+            description: ""
+          - name: last_name
+            data_type: varchar
+            description: ""
+          - name: email
+            data_type: varchar
+            description: ""
+          - name: phone_number
+            data_type: varchar
+            description: ""
+          - name: address_id
+            data_type: varchar
+            description: ""
+          - name: created_at
+            data_type: timestamp_tz
+            description: ""
+          - name: updated_at
+            data_type: timestamp_tz
+            description: ""
+          - name: date_loaded
+            data_type: timestamp_tz
+            description: ""

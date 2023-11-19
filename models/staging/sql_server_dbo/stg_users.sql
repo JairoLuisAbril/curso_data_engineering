@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='table'
+    materialized='view'
   )
 }}
 
@@ -12,14 +12,15 @@ WITH src_users AS (
 renamed_casted AS (
     SELECT
           user_id
-        , updated_at
-        , first_name
-        , last_name
-        , address_id 
-        , phone_number
-        , email        
-        , created_at
-        , total_orders
+        , first_name::varchar(64) as first_name
+        , last_name::varchar(64) as last_name
+        , address_id
+        , phone_number::varchar(64) AS phone_number
+        , email::varchar(64) AS email 
+        , to_date(created_at) AS created_at_date
+        , to_time(created_at) AS created_at_time
+        , to_date(updated_at) AS updated_at_date
+        , to_time(updated_at) AS updated_at_time
         , _fivetran_synced AS date_load
     FROM src_users
     )
