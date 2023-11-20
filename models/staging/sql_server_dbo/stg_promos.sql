@@ -38,7 +38,7 @@ renamed_cast AS(
             , 'Digitized', 'digitized'
             , 'no promotion', 'no promotion') AS promo_name
         ,{{ dbt_utils.generate_surrogate_key(['promo_name']) }} AS promo_id
-        , discount::float AS discount
+        , discount::decimal AS discount
         , status::varchar(60) AS status
         , date_load
     

@@ -23,8 +23,8 @@ renamed_casted AS (
             ELSE product_id
             END AS product_id
         , session_id
-        , to_date(created_at) AS created_at_date
-        , to_time(created_at) AS created_at_time
+        , to_date(created_at) AS created_at_date_utc
+        , to_time(created_at) AS created_at_time_utc
         , page_url::varchar(128) AS page_url
         , _fivetran_synced AS date_load
     FROM src_events
