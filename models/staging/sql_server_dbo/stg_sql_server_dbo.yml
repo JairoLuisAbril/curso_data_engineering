@@ -172,19 +172,19 @@ sources:
             tests:
               - accepted_values: 
                   values: ['ups','fedex','dhl','usps','undefined']
-          - name: promo_name
+          - name: name_promo
             data_type: varchar
             description: ""
           - name: promo_id
             data_type: varchar
             description: ""
-          - name: shipping_cost
+          - name: shipping_cost_usd
             data_type: float
             description: ""  
-          - name: order_cost
+          - name: order_cost_usd
             data_type: float
             description: ""
-          - name: order_total
+          - name: order_total_usd
             data_type: float
             description: ""
           - name: date_loaded            
@@ -200,10 +200,10 @@ sources:
             tests:
                   - unique 
                   - not_null
-          - name: name
+          - name: name_products
             data_type: varchar
             description: ""
-          - name: price
+          - name: products_price_usd
             data_type: float
             description: ""
             tests:

@@ -40,9 +40,9 @@ renamed_casted AS (
             'Digitized', 'digitized',
             '','no promotion') AS name_promo
           , {{ dbt_utils.generate_surrogate_key(['name_promo']) }} AS promo_id
-          , shipping_cost::float AS shipping_cost
-          , order_cost::float AS order_cost
-          , order_total
+          , shipping_cost::float AS shipping_cost_usd
+          , order_cost::float AS order_cost_usd
+          , order_total_usd
           , _fivetran_synced AS date_load
     FROM src_orders ord
 

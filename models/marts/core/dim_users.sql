@@ -44,7 +44,6 @@ SELECT
     , last_name
     , email
     , phone_number
-    , address_id
     , created_at_date_utc
     , created_at_time_utc
     , updated_at_date_utc
