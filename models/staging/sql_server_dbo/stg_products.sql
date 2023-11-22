@@ -17,15 +17,20 @@ WITH src_products AS (
     UNION ALL
 
     SELECT
-         {{ dbt_utils.generate_surrogate_key(['products_name']) }} AS product_id
+         null AS product_id
         , 'No products' AS products_name
         , '0' AS price_usd
         , '0' AS inventory
-        , null AS date_load
+        , '2023-11-11 11:11:35.851000' AS date_load
     ),
 
 renamed_casted AS (
-    SELECT *
+    SELECT 
+           product_id
+        ,  products_name
+        ,  price_usd
+        ,  inventory
+        ,  date_load
 
     FROM src_products
     )

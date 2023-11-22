@@ -8,7 +8,7 @@ WITH dim_date_month AS
 )
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['date_day']) }} date_key
+    {{ dbt_utils.generate_surrogate_key(['date_day']) }} date_id
     , date_day AS date
     , day_of_week_name AS day_of_week
     , day_of_month

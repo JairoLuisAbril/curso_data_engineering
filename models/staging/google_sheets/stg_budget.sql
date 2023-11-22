@@ -12,7 +12,7 @@ WITH src_budget_products AS (
 
 renamed_casted AS (
     SELECT
-          _row
+         {{ dbt_utils.generate_surrogate_key(['_row']) }} AS _row
         , product_id
         , quantity::integer AS quantity
         , month AS date 

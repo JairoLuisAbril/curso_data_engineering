@@ -44,9 +44,9 @@ SELECT
     , last_name
     , email
     , phone_number
-    , created_at_date_utc
+    , created_at_date
     , created_at_time_utc
-    , updated_at_date_utc
+    , updated_at_date
     , updated_at_time_utc
 FROM removing_duplicates_users
 FULL JOIN {{ ref('stg_users') }}

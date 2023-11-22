@@ -94,7 +94,7 @@ sources:
               - relationships:
                   to: ref('stg_products')
                   field: product_id
-          - name: created_at_date_utc
+          - name: created_at_date
             data_type: timestamp_tz
             description: "Fecha de evento en dias-meses-años de un usuario"
             tests:
@@ -165,7 +165,7 @@ sources:
             description: " Identificador de seguimiento para nuestra order"
             tests:
               - not_null
-          - name: created_at_date_utc
+          - name: created_at_date
             data_type: timestamp_tz
             description: "Fecha de tipo dia-mes-año en la que se creo la order"
             tests:
@@ -175,13 +175,13 @@ sources:
             description: "Fecha de tipo hora-minuto-segundo en la que se creo la order"
             tests:
               - not_null
-          - name: estimated_delivery_at_date_utc
+          - name: estimated_delivery_at_date
             data_type: timestamp_tz
             description: "Fecha de tipo dia-mes-año en la que se espera la llegada de la order"
           - name: estimated_delivery_at_time_utc
             data_type: timestamp_tz
             description: "Fecha de tipo hora-minuto-segundo en la que se espera la llegada de la order"
-          - name: delivered_at_date_utc
+          - name: delivered_at_date
             data_type: timestamp_tz
             description: "Fecha de tipo dia-mes-año en la que  llega la order"
           - name: delivered_at_time_utc
@@ -201,13 +201,6 @@ sources:
               - not_null
               - accepted_values: 
                   values: ['ups','fedex','dhl','usps','undefined']
-          - name: name_promo
-            data_type: varchar
-            description: "Nombre de la promoción aplicada"
-            tests:
-              - not_null
-              - accepted_values: 
-                  values: ['task-force', 'instruction set', 'leverage','optional','mandatory', 'digitized','no promotion']
           - name: promo_id
             data_type: varchar
             description: "Identificador de la promoción que se aplica a la order"
@@ -246,7 +239,6 @@ sources:
             description: "Identificador único para un tipo de producto"
             tests:
                   - unique 
-                  - not_null
           - name: products_name
             data_type: varchar
             description: "Nombre del producto"
@@ -335,7 +327,7 @@ sources:
               - relationships:
                   to: ref('stg_addresses')
                   field: address_id
-          - name: created_at_date_utc
+          - name: created_at_date
             data_type: timestamp_tz
             description: "Fecha de creación en dia-mes-año de un usuario"
             tests:
@@ -345,7 +337,7 @@ sources:
             description: "Fecha de creación en hora-minuto-segundo de un usuario"
             tests:
               - not_null
-          - name: updated_at_date_utc
+          - name: updated_at_date
             data_type: timestamp_tz
             description: "Fecha de actualización en dia-mes-año de un usuario"
             tests:

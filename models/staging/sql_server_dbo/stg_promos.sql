@@ -12,7 +12,7 @@ WITH src_promos AS (
 
 renamed_casted AS (
     SELECT     
-         promo_id::varchar(60) AS promo_name
+         lower(promo_id) AS promo_id
         , discount
         , status
         , _fivetran_synced AS date_load
@@ -21,24 +21,16 @@ renamed_casted AS (
     UNION ALL
 
     SELECT
-         'no promotion' AS promo_name
-        , 0 AS discount
-        , 'inactive' AS status
-        , '2023-11-11 11:11:35.244000' AS date_load
+         'no promotion' 
+        , 0 
+        , 'inactive' 
+        , '2023-11-11 11:11:35.244000' 
     ),
 
 renamed_cast AS(
     SELECT 
-        {{ dbt_utils.generate_surrogate_key(['promo_name']) }} AS promo_id
-        ,  decode(
-            promo_name
-            , 'task-force', 'task-force'
-            , 'instruction set', 'instruction set'
-            , 'leverage', 'leverage'
-            , 'Optional', 'optional'
-            , 'Mandatory', 'mandatory'
-            , 'Digitized', 'digitized'
-            , 'no promotion', 'no promotion') AS promo_name
+        {{ dbt_utils.generate_surrogate_key(['promo_id']) }} AS promo_id
+        , promo_id AS promo_name
         , discount::decimal AS discount
         , status::varchar(60) AS status
         , date_load
