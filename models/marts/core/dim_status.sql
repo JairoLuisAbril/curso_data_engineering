@@ -8,6 +8,7 @@ WITH stg_status AS
     FROM stg_orders
 )
 
-SELECT  *
-
+SELECT       
+    {{ dbt_utils.generate_surrogate_key(['status']) }} AS  status_id
+    , status
 FROM stg_status

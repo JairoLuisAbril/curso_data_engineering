@@ -32,12 +32,12 @@ removing_duplicates AS
 )
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['address_id']) }} AS address_id_key,
-    address,
-    zipcode,
-    state,
-    country,
-    date_load
+    {{ dbt_utils.generate_surrogate_key(['address_id']) }} AS address_id_key
+    , address
+    , zipcode
+    , state
+    , country
+    , date_load
 FROM removing_duplicates
 FULL JOIN {{ ref('stg_addresses') }}
 USING(address_id)

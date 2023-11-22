@@ -1,6 +1,7 @@
 {{
   config(
     materialized='view'
+    , unique_key='promo_id'
   )
 }}
 
@@ -28,7 +29,8 @@ renamed_casted AS (
 
 renamed_cast AS(
     SELECT 
-          decode(
+        {{ dbt_utils.generate_surrogate_key(['promo_name']) }} AS promo_id
+        ,  decode(
             promo_name
             , 'task-force', 'task-force'
             , 'instruction set', 'instruction set'
@@ -37,7 +39,6 @@ renamed_cast AS(
             , 'Mandatory', 'mandatory'
             , 'Digitized', 'digitized'
             , 'no promotion', 'no promotion') AS promo_name
-        ,{{ dbt_utils.generate_surrogate_key(['promo_name']) }} AS promo_id
         , discount::decimal AS discount
         , status::varchar(60) AS status
         , date_load

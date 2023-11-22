@@ -1,6 +1,7 @@
 {{
   config(
-    materialized='view'
+     materialized='view'
+    ,unique_key='address_id'
   )
 }}
 
@@ -11,7 +12,8 @@ WITH src_addresses AS (
 
 renamed_casted AS (
     SELECT
-          address_id
+
+         address_id
         , address::varchar(64) AS address 
         , country::varchar(64) AS country 
         , state::varchar(64) AS state 

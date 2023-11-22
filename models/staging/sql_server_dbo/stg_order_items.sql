@@ -13,9 +13,9 @@ renamed_casted AS (
     SELECT
           order_id
         , product_id
-        , quantity::integer AS quantity_order_item
+        , quantity::integer AS quantity
         , _fivetran_synced AS date_load
     FROM src_order_items
     )
 
-SELECT * FROM renamed_casted
+SELECT * FROM renamed_casted order by order_id

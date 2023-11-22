@@ -2,6 +2,7 @@
 {{
   config(
     materialized='view'
+    , unique_key='order_id'
   )
 }}
 
@@ -12,10 +13,10 @@ WITH src_orders AS (
 
 renamed_casted AS (
     SELECT
-            order_id  
-          , user_id
-          , address_id
-          , CASE 
+             order_id
+          ,  user_id
+          ,  address_id
+          ,  CASE 
               WHEN status = 'preparing' THEN 'undefined'
               ELSE COALESCE(tracking_id, 'undefined')
             END AS tracking_id 
@@ -42,7 +43,7 @@ renamed_casted AS (
           , {{ dbt_utils.generate_surrogate_key(['name_promo']) }} AS promo_id
           , shipping_cost::float AS shipping_cost_usd
           , order_cost::float AS order_cost_usd
-          , order_total_usd
+          , order_total::float AS order_total_usd
           , _fivetran_synced AS date_load
     FROM src_orders ord
 

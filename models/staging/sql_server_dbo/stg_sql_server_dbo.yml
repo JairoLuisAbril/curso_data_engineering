@@ -19,32 +19,33 @@ sources:
     tables:
 
       - name: stg_addresses
-        description: ""
+        description: "Tabla de direcciones únicas para mi proyecto"
         columns:
         - name: address_id
           data_type: varchar
-          description: ""
+          description: "Identificador único de una dirección"
           tests:
                 - unique
                 - not_null
         - name: address
           data_type: varchar
-          description: ""
+          description: "Nombre de la dirección"
           tests:
             - not_null
         - name: zipcode
           data_type: number
-          description: ""
+          description: "Codigó postal de la dirección"
           tests:
             - not_null
+            - positive_values
         - name: state
           data_type: varchar
-          description: ""
+          description: "Estado o comunidad de localización de nuestra direccion"
           tests:
             - not_null
         - name: country
           data_type: varchar
-          description: ""
+          description: "País en el que se encuentra nuestra dirección"
           tests:
             - not_null
         - name: date_loaded
@@ -52,20 +53,22 @@ sources:
           description: ""
 
       - name: stg_events
-        description: ""
+        description: "Tabla de eventos registrados dentro de nuestra fuente"
         columns:
           - name: event_id
             data_type: varchar
-            description: ""
+            description: "Identificador único del evento"
             tests:
                   - unique
                   - not_null
           - name: event_type
             data_type: varchar
-            description: ""
+            tests:
+              - not_null
+            description: "Tipo de evento realizado"
           - name: user_id
             data_type: varchar
-            description: ""
+            description: "Usuario que ha realizado el tipo de evento y que debe de tener integridad referencial con user_id de la stg_user"
             tests:
               - not_null
               - relationships:
@@ -73,38 +76,44 @@ sources:
                   field: user_id
           - name: session_id
             data_type: varchar
-            description: ""
+            description: "Sesión en la cual se realiza el evento"
+            tests:
+              - not_null
           - name: page_url
             data_type: varchar
-            description: ""
+            description: "Dirección electrónica (url) en la que se realiza el evento"
+            tests:
+              - not_null
           - name: order_id
             data_type: varchar
-            description: ""
-            tests:
-              - relationships:
-                  to: ref('stg_orders')
-                  field: order_id
+            description: "Identificador de order para nuestro evento"
           - name: product_id
             data_type: varchar
-            description: ""
+            description: "Identificador de order para nuestro evento"
             tests:
-              - not_null 
               - relationships:
                   to: ref('stg_products')
                   field: product_id
-          - name: created_at
-            data_type: timestamp_ntz
-            description: ""
+          - name: created_at_date_utc
+            data_type: timestamp_tz
+            description: "Fecha de evento en dias-meses-años de un usuario"
+            tests:
+              - not_null
+          - name: created_at_time_utc
+            data_type: timestamp_tz
+            description: "Fecha de evento en horas-minutos-segundos de un usuario"
+            tests:
+              - not_null
           - name: date_loaded
             data_type: timestamp_tz
             description: ""
 
       - name: stg_order_items
-        description: ""
+        description: "Tabla de la linea de una order específica"
         columns:
           - name: order_id
             data_type: varchar
-            description: ""
+            description: "Identificador de la order general para un determinado producto"
             tests: 
               - not_null
               - relationships:
@@ -112,7 +121,7 @@ sources:
                   field: order_id
           - name: product_id
             data_type: varchar
-            description: ""
+            description: "Identificador del producto general para una determinada order"
             tests:
               - not_null
               - relationships:
@@ -120,7 +129,7 @@ sources:
                   field: product_id
           - name: quantity
             data_type: number
-            description: ""
+            description: "Cantidad de un producto dentro de una order específica"
             tests:
               - not_null
               - positive_values
@@ -129,89 +138,129 @@ sources:
             description: ""
 
       - name: stg_orders
-        description: ""
+        description: "Tabla que contiene la informacion de todos los pedidos"
         columns:
           - name: order_id
             data_type: varchar
-            description: ""
-          - name: user_id
-            data_type: varchar
-            description: ""
-          - name: address_id
-            data_type: varchar
-            description: ""
-          - name: tracking_id
-            data_type: varchar
-            description: ""
+            description: "Identificador único de una order"
             tests:
               - not_null
-          - name: created_at_date
+              - unique
+          - name: user_id
+            data_type: varchar
+            description: "Identificador único del usuario que realiza esta order"
+            tests:
+              - relationships:
+                  to: ref('stg_users')
+                  field: user_id
+          - name: address_id
+            data_type: varchar
+            description: "Identificador de address para esta order concreta"
+            tests:
+              - relationships:
+                  to: ref('stg_addresses')
+                  field: address_id
+          - name: tracking_id
+            data_type: varchar
+            description: " Identificador de seguimiento para nuestra order"
+            tests:
+              - not_null
+          - name: created_at_date_utc
             data_type: timestamp_tz
-            description: ""
-          - name: created_at_time
+            description: "Fecha de tipo dia-mes-año en la que se creo la order"
+            tests:
+              - not_null
+          - name: created_at_time_utc
             data_type: timestamp_tz
-            description: ""
-          - name: estimated_delivery_at_date
+            description: "Fecha de tipo hora-minuto-segundo en la que se creo la order"
+            tests:
+              - not_null
+          - name: estimated_delivery_at_date_utc
             data_type: timestamp_tz
-            description: ""
-          - name: estimated_delivery_at_time
+            description: "Fecha de tipo dia-mes-año en la que se espera la llegada de la order"
+          - name: estimated_delivery_at_time_utc
             data_type: timestamp_tz
-            description: ""
-          - name: delivered_at_date
+            description: "Fecha de tipo hora-minuto-segundo en la que se espera la llegada de la order"
+          - name: delivered_at_date_utc
             data_type: timestamp_tz
-            description: ""
-          - name: delivered_at_time
+            description: "Fecha de tipo dia-mes-año en la que  llega la order"
+          - name: delivered_at_time_utc
             data_type: timestamp_tz
-            description: ""
+            description: "Fecha de tipo hora-minuto-segundos en la que llega la order"
           - name: status
             data_type: varchar
-            description: ""
+            description: "Estado en el que se encuentra la order"
+            tests:
+              - not_null
+              - accepted_values: 
+                  values: ['preparing','shipped','delivered']
           - name: shipping_service
             data_type: varchar
-            description: ""
+            description: "Compañia que realiza el envío de la order"
             tests:
+              - not_null
               - accepted_values: 
                   values: ['ups','fedex','dhl','usps','undefined']
           - name: name_promo
             data_type: varchar
-            description: ""
+            description: "Nombre de la promoción aplicada"
+            tests:
+              - not_null
+              - accepted_values: 
+                  values: ['task-force', 'instruction set', 'leverage','optional','mandatory', 'digitized','no promotion']
           - name: promo_id
             data_type: varchar
-            description: ""
+            description: "Identificador de la promoción que se aplica a la order"
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_promos')
+                  field: promo_id
           - name: shipping_cost_usd
             data_type: float
-            description: ""  
+            description: "Campo de coste de nuestro shipping para esta order"  
+            tests:
+              - not_null
+              - positive_values
           - name: order_cost_usd
             data_type: float
-            description: ""
+            description: "Campo de coste de los productos de nuestra order"
+            tests:
+              - not_null
+              - positive_values
           - name: order_total_usd
             data_type: float
-            description: ""
+            description: "Campo de valor total de nuestra order"
+            tests:
+              - not_null
+              - positive_values
           - name: date_loaded            
             data_type: timestamp_tz
             description: ""
 
       - name: stg_products
-        description: ""
+        description: "Tabla con los resgitros de productos de las diferentes order"
         columns:
           - name: product_id
             data_type: varchar
-            description: ""
+            description: "Identificador único para un tipo de producto"
             tests:
                   - unique 
                   - not_null
-          - name: name_products
+          - name: products_name
             data_type: varchar
-            description: ""
-          - name: products_price_usd
+            description: "Nombre del producto"
+            tests:
+              - not_null
+          - name: price_usd
             data_type: float
-            description: ""
+            description: "Valor del producto"
             tests:
                   - not_null
                   - positive_values
           - name: inventory
             data_type: number
-            description: ""
+            description: "Cantidad del producto"
             tests:
                   - not_null
                   - positive_values
@@ -220,57 +269,92 @@ sources:
             description: ""
 
       - name: stg_promos
-        description: ""
+        description: "Tabla con las promociones de una order"
         columns:
           - name: promo_id
             data_type: varchar
-            description: ""
+            description: "Identificador único para una promoción"
             tests:
                   - unique 
                   - not_null
+          - name: promo_name
+            data_type: varchar
+            description: "Nombre para una promoción"
+            tests:
+                  - not_null
           - name: discount
             data_type: number
-            description: ""
+            description: "Valor númerico de una promoción"
             tests:
                   - not_null
                   - positive_values
           - name: status
             data_type: varchar
-            description: ""
+            description: "Estado en el cual se encuentra una promoción para ser usada"
+            tests:
+              - not_null
+              - accepted_values: 
+                  values: ['inactive', 'active']
           - name: date_loaded
             data_type: timestamp_tz
             description: ""
 
       - name: stg_users
-        description: ""
+        description: "Tabla que contiene la información de un usuario"
         columns:
           - name: user_id
             data_type: varchar
-            description: ""
+            description: "Identificador único de un usuario"
             tests:
                   - unique 
                   - not_null
           - name: first_name
             data_type: varchar
-            description: ""
+            description: "Campo que contiene el nombre del usuario"
+            tests:
+              - not_null
           - name: last_name
             data_type: varchar
-            description: ""
+            description: "Campo que contiene el apellido del usuario"
+            tests:
+              - not_null
           - name: email
             data_type: varchar
-            description: ""
+            description: "Campo que contiene la información de email de un usuario"
+            tests:
+              - not_null
           - name: phone_number
             data_type: varchar
-            description: ""
+            description: "Campo que contiene el número telefónico de un usuario"
+            tests:
+              - not_null
           - name: address_id
             data_type: varchar
-            description: ""
-          - name: created_at
+            description: "Dirección del usuario"
+            tests:
+              - relationships:
+                  to: ref('stg_addresses')
+                  field: address_id
+          - name: created_at_date_utc
             data_type: timestamp_tz
-            description: ""
-          - name: updated_at
+            description: "Fecha de creación en dia-mes-año de un usuario"
+            tests:
+              - not_null
+          - name: created_at_time_utc
             data_type: timestamp_tz
-            description: ""
+            description: "Fecha de creación en hora-minuto-segundo de un usuario"
+            tests:
+              - not_null
+          - name: updated_at_date_utc
+            data_type: timestamp_tz
+            description: "Fecha de actualización en dia-mes-año de un usuario"
+            tests:
+              - not_null
+          - name: updated_at_time_utc
+            data_type: timestamp_tz
+            description: "Fecha de actualización en horas-minutos-segundo de un usuario"
+            tests:
+              - not_null
           - name: date_loaded
             data_type: timestamp_tz
             description: ""
