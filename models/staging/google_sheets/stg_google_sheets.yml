@@ -3,7 +3,7 @@ version: 2
 sources:
 
   - name: stg_google_sheets # name of the source 
-    schema: dbt # this is the schema our raw data lives in
+    schema: google_sheets # this is the schema our raw data lives in
     database: ALUMNO10_DEV_SILVER_DB # this is the name of our database
     
     quoting:

@@ -5,7 +5,7 @@
 WITH stg_status AS 
 (
     SELECT DISTINCT(status)
-    FROM stg_orders
+    FROM {{ ref('stg_orders') }}
 )
 
 SELECT       

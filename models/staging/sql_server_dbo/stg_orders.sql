@@ -64,8 +64,8 @@ renamed_casted AS (
         , order_total_usd
         , date_load
 
-    FROM src_orders
+    FROM src_orders  order by order_id
 
 )
 
-SELECT * FROM renamed_casted ORDER BY promo_id
+SELECT * FROM renamed_casted 
