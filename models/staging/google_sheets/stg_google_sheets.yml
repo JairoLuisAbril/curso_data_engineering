@@ -1,0 +1,42 @@
+version: 2
+
+sources:
+
+  - name: stg_google_sheets # name of the source 
+    schema: google_sheets # this is the schema our raw data lives in
+    database: ALUMNO10_DEV_SILVER_DB # this is the name of our database
+    
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 32, period: day}
+      error_after: {count: 33, period: day}
+
+
+    tables:
+
+    - name: stg_budget
+      columns:
+        - name: budget_id
+          tests:
+            - not_null
+            - unique 
+        - name: product_id         
+          tests:
+            - not_null
+            - relationships:
+                  to: ref('stg_products')
+                  field: product_id  
+        - name: quantity
+          tests:
+            - positive_values
+        - name: date
+          tests:
+            - not_null
+        - name: date_load
+          tests:
+            - not_null
+            

@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+
+  - name: google_sheets # name of the source 
+    schema: google_sheets # this is the schema our raw data lives in
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"  # this is the name of our database
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 32, period: day}
+      error_after: {count: 33, period: day}
+
+    tables:
+
+      - name: budget
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+            tests:
+              - unique
+              - not_null
+          - name: product_id
+            tests:
+              - relationships:
+                 to: source('sql_server_dbo','stg_products')
+                 field: product_id
+          - name: quantity
+            tests:
+              - positive_values
+          - name: month
+            tests:
+              - not_null
+          - name: _fivetran_synced
