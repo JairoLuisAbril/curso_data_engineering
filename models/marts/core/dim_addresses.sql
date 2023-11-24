@@ -32,7 +32,7 @@ removing_duplicates AS
 )
 
 SELECT
-    address_id
+      address_id
     , address
     , zipcode
     , state

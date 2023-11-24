@@ -13,8 +13,7 @@ WITH dim_date_time AS
 )
 
 SELECT
-     {{ dbt_utils.generate_surrogate_key(['date_second']) }} time_id
-    , date_second AS time
+      date_second AS time
     , CASE 
         WHEN date_second < '12:00:00' THEN 'am'
         ELSE 'pm' END AS am_or_pm

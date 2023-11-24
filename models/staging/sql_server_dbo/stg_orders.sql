@@ -56,8 +56,8 @@ renamed_casted AS (
         , delivered_at_time_utc
         , {{ dbt_utils.generate_surrogate_key(['status']) }} AS  status_id
         , status
-        , {{ dbt_utils.generate_surrogate_key(['shipping_service']) }} AS shipping_service_id
         , shipping_service
+        , {{ dbt_utils.generate_surrogate_key(['shipping_service']) }} AS shipping_service_id
         , {{ dbt_utils.generate_surrogate_key(['promo_id']) }} AS promo_id
         , shipping_cost_usd
         , order_cost_usd

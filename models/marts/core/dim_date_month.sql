@@ -8,12 +8,11 @@ WITH dim_date_month AS
 )
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['date_day']) }} date_id
-    , date_day AS date
+      date_day AS date
     , day_of_week_name AS day_of_week
-    , day_of_month
-    , week_of_year
-    , month_of_year
-    , year_number
+    , day_of_month AS day_of_month
+    , week_of_year AS week_of_year
+    , month_of_year AS month_of_year
+    , year_number AS year_number
     , quarter_of_year AS quarter_of_the_year
 FROM dim_date_month

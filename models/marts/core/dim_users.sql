@@ -42,6 +42,7 @@ SELECT
     {{ dbt_utils.generate_surrogate_key(['user_id']) }} AS user_id_key
     , first_name
     , last_name
+    , address_id
     , email
     , phone_number
     , created_at_date

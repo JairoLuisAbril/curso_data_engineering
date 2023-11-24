@@ -11,7 +11,8 @@ WITH src_order_items AS (
 
 renamed_casted AS (
     SELECT
-          order_id
+        {{ dbt_utils.generate_surrogate_key(['order_id', 'product_id']) }} AS order_item_id
+        ,  order_id
         , product_id
         , quantity::integer AS quantity
         , _fivetran_synced AS date_load

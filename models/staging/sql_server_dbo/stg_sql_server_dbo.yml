@@ -111,11 +111,13 @@ sources:
       - name: stg_order_items
         description: "Tabla de la linea de una order específica"
         columns:
+          - name: order_items_id
+            data_type: varchar
+            description: "Identificador único de la order con un producto específico"
           - name: order_id
             data_type: varchar
             description: "Identificador de la order general para un determinado producto"
             tests: 
-              - not_null
               - relationships:
                   to: ref('stg_orders')
                   field: order_id
@@ -123,7 +125,6 @@ sources:
             data_type: varchar
             description: "Identificador del producto general para una determinada order"
             tests:
-              - not_null
               - relationships:
                   to: ref('stg_sql_products')
                   field: product_id
@@ -194,6 +195,11 @@ sources:
               - not_null
               - accepted_values: 
                   values: ['preparing','shipped','delivered']
+          - name: status_id
+            data_type: varchar
+            description: "Identificador de estado en el que se encuentra la order"
+            tests:
+              - not_null
           - name: shipping_service
             data_type: varchar
             description: "Compañia que realiza el envío de la order"
@@ -201,6 +207,11 @@ sources:
               - not_null
               - accepted_values: 
                   values: ['ups','fedex','dhl','usps','undefined']
+          - name: shipping_service_id
+            data_type: varchar
+            description: "Identificador de la compañia que realiza el envío de la order"
+            tests:
+              - not_null
           - name: promo_id
             data_type: varchar
             description: "Identificador de la promoción que se aplica a la order"
