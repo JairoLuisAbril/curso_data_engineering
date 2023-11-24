@@ -369,7 +369,7 @@ sources:
             description: "Identificador de la order general para un determinado producto"
             tests:
               - not_null
-          - name: user_id
+          - name: user_id 
             data_type: varchar
             description: "Identificador único del usuario que realiza esta order"
           - name: address_id
