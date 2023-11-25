@@ -105,7 +105,7 @@ sources:
             description: "País en el que se encuentra nuestra dirección"
             tests:
               - not_null
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -149,7 +149,7 @@ sources:
             tests:
               - not_null
               - positive_values
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -177,7 +177,7 @@ sources:
               - not_null
               - accepted_values:
                   values: ["inactive", "active"]
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -282,7 +282,7 @@ sources:
               - relationships:
                   to: ref('dim_date_time')
                   field: time
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -353,7 +353,7 @@ sources:
               - relationships:
                   to: ref('dim_date_time')
                   field: time
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -486,7 +486,7 @@ sources:
             description: " Identificador de seguimiento para nuestra order"
             tests:
                 - not_null
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 

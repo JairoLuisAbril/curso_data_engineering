@@ -48,7 +48,7 @@ sources:
           description: "País en el que se encuentra nuestra dirección"
           tests:
             - not_null
-        - name: date_loaded
+        - name: date_load
           data_type: timestamp_tz
           description: ""
 
@@ -104,7 +104,7 @@ sources:
             description: "Fecha de evento en horas-minutos-segundos de un usuario"
             tests:
               - not_null
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -134,7 +134,7 @@ sources:
             tests:
               - not_null
               - positive_values
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -238,7 +238,7 @@ sources:
             tests:
               - not_null
               - positive_values
-          - name: date_loaded            
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -267,7 +267,7 @@ sources:
             tests:
                   - not_null
                   - positive_values
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -298,7 +298,7 @@ sources:
               - not_null
               - accepted_values: 
                   values: ['inactive', 'active']
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
 
@@ -358,6 +358,6 @@ sources:
             description: "Fecha de actualización en horas-minutos-segundo de un usuario"
             tests:
               - not_null
-          - name: date_loaded
+          - name: date_load
             data_type: timestamp_tz
             description: ""
