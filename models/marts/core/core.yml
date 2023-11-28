@@ -492,22 +492,30 @@ sources:
 
 
       - name: fact_budget
-        description: ""
+        description: "Tabla de hechos de budget"
         columns:
           - name: budget_id
+            data_type: varchar
+            description: "Identificador único para un tipo de budget"
             tests:
               - not_null
               - unique
           - name: product_id
+            data_type: varchar
+            description: "Identificador único para un tipo de producto"
             tests:
               - not_null
               - relationships:
                   to: ref('dim_product')
                   field: product_id
           - name: quantity
+            data_type: varchar
+            description: "Cantidad de un budget"
             tests:
               - positive_values
           - name: date
+            data_type: timestamp_tz
+            description: "Fecha de la budget"
             tests:
               - not_null
           - name: date_load

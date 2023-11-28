@@ -121,7 +121,7 @@ sources:
           - name: product_id
             tests:
               - relationships:
-                 to: source('sql_server_dbo','stg_products')
+                 to: ref('stg_products')
                  field: product_id
               - not_null
           - name: quantity

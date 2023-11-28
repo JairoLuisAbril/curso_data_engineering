@@ -36,9 +36,10 @@ user_all_with_duplicates AS(
 removing_duplicates_users AS(
     SELECT DISTINCT(user_id)
     FROM user_all_with_duplicates
-)
+),
 
-SELECT
+unit_all as(
+    select     
     {{ dbt_utils.generate_surrogate_key(['user_id']) }} AS user_id_key
     , first_name
     , last_name
@@ -49,6 +50,10 @@ SELECT
     , created_at_time_utc
     , updated_at_date
     , updated_at_time_utc
-FROM removing_duplicates_users
-FULL JOIN {{ ref('stg_users') }}
-USING(user_id)
+    from removing_duplicates_users
+    FULL JOIN {{ ref('stg_users') }}
+    USING(user_id)
+)
+
+SELECT*
+FROM unit_all

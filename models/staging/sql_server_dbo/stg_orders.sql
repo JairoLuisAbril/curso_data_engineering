@@ -64,7 +64,7 @@ renamed_casted AS (
         , order_total_usd
         , date_load
 
-    FROM src_orders  order by order_id
+    FROM src_orders  
 
 )
 

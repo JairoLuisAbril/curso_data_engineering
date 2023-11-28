@@ -126,7 +126,7 @@ sources:
             description: "Identificador del producto general para una determinada order"
             tests:
               - relationships:
-                  to: ref('stg_sql_products')
+                  to: ref('stg_products')
                   field: product_id
           - name: quantity
             data_type: number
