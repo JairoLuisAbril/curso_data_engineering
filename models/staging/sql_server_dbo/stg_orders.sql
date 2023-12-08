@@ -7,8 +7,9 @@
 WITH src_orders AS (
     SELECT
           order_id
+        , {{ dbt_utils.generate_surrogate_key(['sellers_id']) }} AS sellers_id
         , user_id
-        , address_id
+        , {{ dbt_utils.generate_surrogate_key(['address_id'])}} AS address_id
         , CASE
             WHEN status = 'preparing' THEN 'undefined'
             ELSE COALESCE(tracking_id, 'undefined')
@@ -45,6 +46,7 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
         order_id
+        , sellers_id
         , user_id
         , address_id
         , tracking_id

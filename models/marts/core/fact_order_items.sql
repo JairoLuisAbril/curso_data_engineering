@@ -37,6 +37,7 @@ stg_orders_quantity AS (
 union_order_items AS (
     SELECT
           order_item_id
+        , sellers_id
         , order_id
         , user_id
         , created_at_date
@@ -69,6 +70,7 @@ union_order_items AS (
 SELECT
           order_item_id
         , order_id
+        , sellers_id
         , user_id
         , address_id
         , created_at_date

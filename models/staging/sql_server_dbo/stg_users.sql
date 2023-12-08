@@ -15,7 +15,7 @@ renamed_casted AS (
           user_id
         , first_name::varchar(64) as first_name
         , last_name::varchar(64) as last_name
-        , address_id
+        , {{ dbt_utils.generate_surrogate_key(['address_id'])}} AS address_id
         , phone_number::varchar(64) AS phone_number
         , email::varchar(64) AS email 
         , to_date(created_at) AS created_at_date

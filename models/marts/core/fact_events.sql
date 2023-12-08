@@ -13,6 +13,7 @@ WITH stg_events AS
 SELECT
     event_id
     , event_type_id
+    , page_url
     , user_id
     , session_id
     , order_id
