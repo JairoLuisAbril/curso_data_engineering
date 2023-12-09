@@ -1,7 +1,6 @@
 {{
   config(
     materialized='view'
-    , unique_key='user_id'
   )
 }}
 

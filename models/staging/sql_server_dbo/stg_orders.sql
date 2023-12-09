@@ -41,11 +41,17 @@ WITH src_orders AS (
         , _fivetran_synced AS date_load
 
     FROM {{ source('sql_server_dbo', 'orders') }}
+
+   /* {% if is_incremental() %}
+
+	  where src_orders._fivetran_synced > (select max(this._fivetran_synced) from {{ this }} as this)
+
+{% endif %}*/
 ),
 
 renamed_casted AS (
     SELECT
-        order_id
+          order_id
         , sellers_id
         , user_id
         , address_id

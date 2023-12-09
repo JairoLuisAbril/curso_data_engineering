@@ -13,7 +13,7 @@ renamed_casted AS (
     SELECT
           event_id
         , event_type
-        ,{{ dbt_utils.generate_surrogate_key(['event_type']) }} AS event_type_id
+        , {{dbt_utils.generate_surrogate_key(['event_type'])}} AS event_type_id
         , CASE 
             WHEN order_id='' then 'wihtout order_id'
             ELSE order_id
