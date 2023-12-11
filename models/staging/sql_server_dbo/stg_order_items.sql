@@ -1,17 +1,19 @@
 {{
   config(
-    materialized='view'
+    materialized='incremental',
+    unique_key='order_item_id'
   )
 }}
 
 WITH src_order_items AS (
     SELECT * 
     FROM {{ source('sql_server_dbo', 'order_items') }}
-/*{% if is_incremental() %}
 
-	  where src_order_items._fivetran_synced > (select max(this._fivetran_synced) from {{ this }} as this)
+    {% if is_incremental() %}
 
-{% endif %}*/
+	  where _fivetran_synced > (select max(date_load) from {{ this }})
+
+    {% endif %}
 
 ),
 

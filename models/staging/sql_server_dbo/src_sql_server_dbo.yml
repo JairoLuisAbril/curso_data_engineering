@@ -182,7 +182,7 @@ sources:
             description: "Identificador de la order general para un determinado producto"
             tests:
               - relationships:
-                 to: ref('stg_orders')
+                 to: source('sql_server_dbo','orders')
                  field: order_id
               - not_null
           - name: product_id
@@ -190,7 +190,7 @@ sources:
             description: "Identificador del producto general para una determinada order"
             tests:
               - relationships:
-                 to: ref('stg_products')
+                 to: source('sql_server_dbo','products')
                  field: product_id
               - not_null
           - name: quantity

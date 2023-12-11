@@ -198,7 +198,7 @@ models:
             tests:
               - not_null
               - accepted_values: 
-                  values: ['ups','fedex','dhl','usps','undefined']
+                  values: ['ups','fedex','dhl','usps','undefined','']
           - name: shipping_service_id
             data_type: varchar
             description: "Identificador de la compañia que realiza el envío de la order"

@@ -1,6 +1,7 @@
 {{
   config(
-    materialized='view'
+    materialized='incremental',
+    unique_key='order_id',
   )
 }}
 
@@ -35,18 +36,18 @@ WITH src_orders AS (
             'Digitized', 'digitized',
             '', 'no promotion'
           ) AS promo_id
-        , shipping_cost::float AS shipping_cost_usd
-        , order_cost::float AS order_cost_usd
-        , order_total::float AS order_total_usd
+        , shipping_cost::decimal(7,2) AS shipping_cost_usd
+        , order_cost::decimal(7,2) AS order_cost_usd
+        , order_total::decimal(7,2) AS order_total_usd
         , _fivetran_synced AS date_load
 
     FROM {{ source('sql_server_dbo', 'orders') }}
 
-   /* {% if is_incremental() %}
+    {% if is_incremental() %}
 
-	  where src_orders._fivetran_synced > (select max(this._fivetran_synced) from {{ this }} as this)
+	  where _fivetran_synced > (select max(date_load) from {{ this }})
 
-{% endif %}*/
+    {% endif %}
 ),
 
 renamed_casted AS (
