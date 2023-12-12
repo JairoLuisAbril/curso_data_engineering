@@ -13,6 +13,8 @@ WITH stg_order_items AS
 (
     SELECT *
     FROM {{ ref("stg_order_items") }}
+    WHERE date_load = (select max(date_load) from {{ ref('stg_order_items') }})   -- se hace la snapshot incremental
+
 ),
 
 stg_products AS 
@@ -21,12 +23,15 @@ stg_products AS
         product_id,
         price_usd
     FROM {{ ref("stg_products") }}
+
 ),
 
 stg_orders AS 
 (
     SELECT *
     FROM {{ ref("stg_orders") }}
+    WHERE date_load = (select max(date_load) from {{ ref('stg_orders') }})   -- se hace la snapshot incremental
+
 ),
 
 stg_orders_quantity AS (
@@ -69,6 +74,8 @@ union_order_items AS (
     JOIN stg_orders_quantity
     USING(order_id)
     order by order_id
+
+
 )
    
 SELECT
