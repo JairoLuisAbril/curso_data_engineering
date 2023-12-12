@@ -4,41 +4,13 @@
   )
 }}
 
-WITH stg_users AS 
+WITH dim_users_snapshot AS 
 (
-    SELECT DISTINCT user_id
-    FROM {{ ref('stg_users') }}
-),
-
-stg_orders AS 
-(
-    SELECT DISTINCT user_id 
-    FROM {{ ref('stg_orders') }}
-),
-
-stg_events AS 
-(
-    SELECT DISTINCT user_id 
-    FROM {{ ref('stg_events') }}
-),
-
-user_all_with_duplicates AS(
-    SELECT *
-    FROM stg_users
-    UNION ALL
     SELECT * 
-    FROM stg_orders
-    UNION ALL
-    SELECT *
-    FROM stg_events
-),
-
-removing_duplicates_users AS(
-    SELECT DISTINCT(user_id)
-    FROM user_all_with_duplicates
+    FROM {{ ref('dim_users_snapshot') }}
 )
 
-SELECT
+    select     
     {{ dbt_utils.generate_surrogate_key(['user_id']) }} AS user_id_key
     , first_name
     , last_name
@@ -49,6 +21,5 @@ SELECT
     , created_at_time_utc
     , updated_at_date
     , updated_at_time_utc
-FROM removing_duplicates_users
-FULL JOIN {{ ref('stg_users') }}
-USING(user_id)
+    from dim_users_snapshot
+    where dbt_valid_to is null

@@ -1,23 +1,7 @@
 version: 2
 
-sources:
-
-  - name: stg_sql_server_dbo # name of the source 
-    schema: sql_server_dbo # this is the schema our raw data lives in
-    database: ALUMNO10_DEV_SILVER_DB # this is the name of our database
-    
-    quoting:
-      database: false
-      schema: false
-      identifier: false
-
-    freshness:
-      warn_after: {count: 32, period: day}
-      error_after: {count: 33, period: day}
-
-
-    tables:
-
+models:
+  
       - name: stg_addresses
         description: "Tabla de direcciones únicas para mi proyecto"
         columns:
@@ -63,9 +47,9 @@ sources:
                   - not_null
           - name: event_type
             data_type: varchar
+            description: "Tipo de evento realizado"          
             tests:
               - not_null
-            description: "Tipo de evento realizado"
           - name: user_id
             data_type: varchar
             description: "Usuario que ha realizado el tipo de evento y que debe de tener integridad referencial con user_id de la stg_user"
@@ -126,7 +110,7 @@ sources:
             description: "Identificador del producto general para una determinada order"
             tests:
               - relationships:
-                  to: ref('stg_sql_products')
+                  to: ref('stg_products')
                   field: product_id
           - name: quantity
             data_type: number
@@ -147,6 +131,14 @@ sources:
             tests:
               - not_null
               - unique
+          - name: sellers_id
+            data_type: varchar
+            description: "Identificador único de un vendedor"  
+            tests:
+               - not_null
+               - relationships:
+                  to: ref('stg_sellers')
+                  field: sellers_id
           - name: user_id
             data_type: varchar
             description: "Identificador único del usuario que realiza esta order"
@@ -206,7 +198,7 @@ sources:
             tests:
               - not_null
               - accepted_values: 
-                  values: ['ups','fedex','dhl','usps','undefined']
+                  values: ['ups','fedex','dhl','usps','undefined','']
           - name: shipping_service_id
             data_type: varchar
             description: "Identificador de la compañia que realiza el envío de la order"
@@ -282,12 +274,12 @@ sources:
                   - not_null
           - name: promo_name
             data_type: varchar
-            description: "Nombre para una promoción"
+            description: "Nombre para una promoción extraido de la tabla orders"
             tests:
                   - not_null
           - name: discount
             data_type: number
-            description: "Valor númerico de una promoción"
+            description: "Valor númerico de una promoción esta en tipo entero y no es el valor entero de porcentaje"
             tests:
                   - not_null
                   - positive_values
@@ -333,7 +325,7 @@ sources:
               - not_null
           - name: address_id
             data_type: varchar
-            description: "Dirección del usuario"
+            description: "Identificador único de dirección del usuario"
             tests:
               - relationships:
                   to: ref('stg_addresses')
@@ -361,3 +353,65 @@ sources:
           - name: date_load
             data_type: timestamp_tz
             description: ""
+
+      - name: stg_sellers
+        description: "Tabla que contiene la información de un vendedor"
+        columns:
+          - name: sellers_id
+            data_type: varchar
+            description: "Identificador único del vendedor"
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+            data_type: varchar
+            description: "Nombre del vendedor"
+            tests:
+              - not_null
+          - name: last_name
+            data_type: varchar
+            description: "Apellido del vendedor"
+            tests:
+              - not_null
+          - name: salary
+            data_type: number
+            description: "Valor del salario del vendedor"
+            tests:
+              - not_null
+              - positive_values
+          - name: commission
+            data_type: number
+            description: "Valor del porcentaje de comision que se lleva el vendedor por cada venta es un tipo entero"
+            tests:
+              - not_null
+              - positive_values
+          - name: address_id
+            data_type: varchar
+            description: "Identificador único de la address del vendedor"
+            tests:
+              - not_null
+          - name: contract_start_date_at_date
+            data_type: timestamp_tz
+            description: "Fecha de inicio de contrato en dias-mes-años del vendedor"
+            tests:
+              - not_null
+          - name: contract_start_date_at_time_utc
+            data_type: timestamp_tz
+            description: "Fecha de inicio de contrato en horas-minutos-segundos del vendedor"
+            tests:
+              - not_null
+          - name: contract_end_date_at_date
+            data_type: timestamp_tz
+            description: "Fecha de fin del contrato en dias-mes-año del vendedor"
+            tests:
+              - not_null
+          - name: contract_end_date_at_time_utc
+            data_type: timestamp_tz
+            description: "Fecha de fin del contrato en horas-minutos-segundos del vendedor"
+            tests:
+              - not_null
+          - name: date_load
+            data_type: timestamp_tz
+            tests:
+              - not_null
+

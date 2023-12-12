@@ -4,39 +4,16 @@
   )
 }}
 
-WITH stg_products AS (
-    SELECT DISTINCT product_id
-    FROM {{ ref('stg_products') }}
-),
-
-stg_budget AS (
-    SELECT DISTINCT product_id
-    FROM {{ ref('stg_budget') }}
-),
-
-stg_events AS (
-    SELECT DISTINCT product_id
-    FROM {{ ref('stg_events') }}
-),
-
-products_all_with_duplicates AS (
+WITH dim_products_snapshot AS (
     SELECT *
-    FROM stg_products
-    UNION ALL
-    SELECT *
-    FROM stg_budget
-    UNION ALL
-    SELECT *
-    FROM stg_events
-),
-
-removing_duplicates AS (
-    SELECT DISTINCT product_id
-    FROM products_all_with_duplicates
+    FROM {{ ref('dim_products_snapshot') }}
 )
 
-SELECT *
-FROM removing_duplicates
-FULL JOIN {{ ref('stg_products') }}
-    USING (product_id)
-WHERE products_name is not null
+SELECT 
+       product_id
+    ,  products_name
+    ,  price_usd
+    ,  inventory
+    ,  date_load
+FROM dim_products_snapshot
+WHERE dbt_valid_to IS NULL AND products_name IS NOT NULL

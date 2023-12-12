@@ -9,5 +9,6 @@ WITH stg_event_types_id AS (
     FROM {{ ref('stg_events') }}
 )
 
-SELECT *
+SELECT event_type_id,
+        event_type
 FROM stg_event_types_id

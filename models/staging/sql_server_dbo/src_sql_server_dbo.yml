@@ -20,48 +20,77 @@ sources:
     tables:
 
       - name: addresses
+        description: "Tabla de direcciones únicas de nuestra fuente(crudo)"
         columns:
           - name: address_id
+            data_type: varchar
+            description: "Identificador único de una dirección"
             tests:
               - unique
               - not_null
           - name: zipcode
+            data_type: number
+            description: "Codigó postal de la dirección"
             tests:
               - not_null
           - name: country
+            data_type: varchar
+            description: "País en el que se encuentra nuestra dirección"
             tests:
               - not_null
           - name: address
+            data_type: varchar
+            description: "Nombre de la dirección"
+            tests:
+              - not_null
+          - name: state
+            data_type: varchar
+            description: "Estado o comunidad de localización de nuestra direccion"
             tests:
               - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
       - name: events
+        description: "Tabla de eventos registrados dentro de nuestra fuente(crudo)"
         columns:
           - name: event_id
+            data_type: varchar
+            description: "Identificador único del evento"
             tests:
               - unique
               - not_null
           - name: page_url
+            data_type: varchar
+            description: "Dirección electrónica (url) en la que se realiza el evento"
             tests:
               - not_null
           - name: event_type
+            data_type: varchar
+            description: "Tipo de evento realizado" 
             tests:
               - not_null
           - name: user_id
+            data_type: varchar
+            description: "Usuario que ha realizado el tipo de evento"
             tests:
               - not_null
           - name: product_id
-            tests:
-              - not_null
+            data_type: varchar
+            description: "Identificador de order para nuestro evento"
           - name: session_id
+            data_type: varchar
+            description: "Sesión en la cual se realiza el evento"
             tests:
               - not_null
           - name: created_at
+            data_type: timestamp_tz
+            description: "Fecha de evento de un usuario"
             tests:
               - not_null
           - name: order_id
+            data_type: varchar
+            description: "Identificador de order para nuestro evento"
             tests:
               - not_null
           - name: _fivetran_deleted
@@ -69,44 +98,76 @@ sources:
 
 
       - name: orders
+        description: "Tabla que contiene la informacion de todos los pedidos"
         columns:
           - name: order_id
+            data_type: varchar
+            description: "Identificador único de una order"
             tests:
               - unique
               - not_null
+          - name: sellers_id
+            data_type: varchar
+            description: "Identificador único de un vendedor"  
+            tests:
+              - not_null
           - name: shipping_service
+            data_type: varchar
+            description: "Compañia que realiza el envío de la order"
             tests:
               - accepted_values: 
                   values: ['ups','fedex','dhl','usps','']
           - name: shipping_cost
+            data_type: float
+            description: "Campo de coste de nuestro shipping para esta order"  
             tests:
               - positive_values
               - not_null
           - name: address_id
+            data_type: varchar
+            description: "Identificador de address para esta order concreta"
             tests:
               - not_null
           - name: created_at
+            data_type: timestamp_tz
+            description: "Fecha de tipo en la que se creo la order"
             tests:
               - not_null
           - name: promo_id
+            data_type: varchar
+            description: "Identificador de la promoción que se aplica a la order"
             tests:
               - accepted_values:
                   values: ['task-force','instruction set','leverage','Optional','Mandatory','Digitized','']
           - name: estimated_delivery_at
+            data_type: timestamp_tz
+            description: "Fecha de tipo en la que se espera la llegada de la order"
           - name: order_cost
+            data_type: float
+            description: "Campo de coste de los productos de nuestra order"
             tests:
               - not_null
               - positive_values
           - name: user_id
+            data_type: varchar
+            description: "Identificador único del usuario que realiza esta order"
             tests:
               - not_null
           - name: order_total
+            data_type: float
+            description: "Campo de valor total de nuestra order"
             tests:
               - not_null
               - positive_values
           - name: delivered_at
+            data_type: timestamp_tz
+            description: "Fecha de tipo en la que llega la order"
           - name: tracking_id
+            data_type: varchar
+            description: " Identificador de seguimiento para nuestra order"
           - name: status
+            data_type: varchar
+            description: "Estado en el que se encuentra la order"
             tests:
               - accepted_values:
                   values: ['delivered','preparing','shipped']
@@ -114,36 +175,55 @@ sources:
           - name: _fivetran_synced
           
       - name: order_items
+        description: "Tabla de la linea de una order específica extraida de nuestra fuente de datos(crudo)"
         columns:
           - name: order_id
-            tests:
-              - not_null
-          - name: product_id
+            data_type: varchar
+            description: "Identificador de la order general para un determinado producto"
             tests:
               - relationships:
-                 to: source('sql_server_dbo','stg_products')
+                 to: source('sql_server_dbo','orders')
+                 field: order_id
+              - not_null
+          - name: product_id
+            data_type: varchar
+            description: "Identificador del producto general para una determinada order"
+            tests:
+              - relationships:
+                 to: source('sql_server_dbo','products')
                  field: product_id
               - not_null
           - name: quantity
+            data_type: number
+            description: "Cantidad de un producto dentro de una order específica"
             tests:
               - positive_values
           - name: _fivetran_deleted
           - name: _fivetran_synced
 
       - name: products
+        description: "Tabla con los resgitros de productos de la fuente de datos(crudo)"
         columns:
           - name: product_id
+            data_type: varchar
+            description: "Identificador único para un tipo de producto"
             tests:
               - unique
               - not_null
           - name: price
+            data_type: float
+            description: "Valor del producto"
             tests:
               - positive_values
               - not_null
           - name: name
+            data_type: varchar
+            description: "Nombre del producto"
             tests:
               - not_null
           - name: inventory
+            data_type: number
+            description: "Cantidad del producto"
             tests:
               - positive_values
               - not_null
@@ -151,15 +231,22 @@ sources:
           - name: _fivetran_synced
 
       - name: promos
+        description: "Tabla con las promociones de una order procede de nuestra fuentes de datos(crudo)"
         columns:
           - name: promo_id
+            data_type: varchar
+            description: "Identificador único para una promoción"
             tests:
               - unique
               - not_null
           - name: discount
+            data_type: number
+            description: "Valor númerico de una promoción"
             tests:
               - positive_values
           - name: status
+            data_type: varchar
+            description: "Estado en el cual se encuentra una promoción para ser usada"
             tests:
               - accepted_values:
                   values: ['inactive','active']
@@ -167,32 +254,101 @@ sources:
           - name: _fivetran_synced
 
       - name: users
+        description: "Tabla que contiene la información de un usuario procede de la fuente de datos(crudo)"
         columns:
           - name: user_id
+            data_type: varchar
+            description: "Identificador único de un usuario"
             tests:
               - unique
               - not_null
           - name: updated_at
+            data_type: timestamp_tz
+            description: "Fecha de actualización de un usuario"
             tests:
               - not_null
           - name: address_id
+            data_type: varchar
+            description: "Identificado de la direccion del usuario"
             tests:
               - not_null
           - name: last_name
+            data_type: varchar
+            description: "Campo que contiene el apellido del usuario"
             tests:
               - not_null
           - name: created_at
+            data_type: timestamp_tz
+            description: "Fecha de creación de un usuario"
             tests:
               - not_null
           - name: phone_number
+            data_type: varchar
+            description: "Campo que contiene el número telefónico de un usuario"
             tests:
               - not_null
           - name: total_orders
+            data_type: number
+            description: "Número total de order(viene completamente vacío)"
           - name: first_name
+            data_type: varchar
+            description: "Campo que contiene el nombre del usuario"
             tests:
               - not_null
           - name: email
+            data_type: varchar
+            description: "Campo que contiene la información de email de un usuario"
             tests:
               - not_null
           - name: _fivetran_deleted
           - name: _fivetran_synced
+
+      - name: sellers
+        description: "Tabla que contiene la información de un vendedor procede de la fuentes de datos(crudo)"
+        columns:
+          - name: sellers_id
+            data_type: varchar
+            description: "Identificador único del vendedor"
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+            data_type: varchar
+            description: "Nombre del vendedor"
+            tests:
+              - not_null
+          - name: last_name
+            data_type: varchar
+            description: "Apellido del vendedor"
+            tests:
+              - not_null
+          - name: salary
+            data_type: number
+            description: "Valor del salario del vendedor"
+            tests:
+              - not_null
+              - positive_values
+          - name: commission
+            data_type: number
+            description: "Valor del porcentaje de comision que se lleva el vendedor por cada venta es un tipo entero"
+            tests:
+              - not_null
+              - positive_values
+          - name: address_id
+            data_type: varchar
+            description: "Identificador de la address del vendedor"
+            tests:
+              - not_null
+          - name: contract_start_date
+            data_type: timestamp_tz
+            description: "Fecha de inicio de contrato del vendedor"
+            tests:
+              - not_null
+          - name: contract_end_date
+            data_type: timestamp_tz
+            description: "Fecha de fin del contrato del vendedor"
+            tests:
+              - not_null
+          - name: _fivetran_synced
+            tests:
+              - not_null

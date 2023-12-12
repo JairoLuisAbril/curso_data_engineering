@@ -1,23 +1,9 @@
 version: 2
 
-sources:
-  - name: core # name of the source
-    schema: core # this is the schema our raw data lives in
-    database: ALUMNO10_DEV_GOLD_DB # this is the name of our database
-
-    quoting:
-      database: false
-      schema: false
-      identifier: false
-
-    freshness:
-      warn_after: { count: 32, period: day }
-      error_after: { count: 33, period: day }
-
-    tables:
+models:
 
       - name: dim_date_month
-        description: "Tabla de fechas por meses"
+        description: "Tabla de dimensiones fechas por meses"
         columns:
           - name: date
             data_type: date
@@ -57,7 +43,7 @@ sources:
               - not_null
 
       - name: dim_date_time
-        description: "Tabla de horas"
+        description: "Tabla de dimensiones de una fecha hora"
         columns:
           - name: time
             data_type: varchar
@@ -76,7 +62,7 @@ sources:
               - not_null
 
       - name: dim_addresses
-        description: "Tabla de direcciones únicas para mi proyecto"
+        description: "Tabla de dimensiones de direcciones únicas para mi proyecto"
         columns:
           - name: address_id
             data_type: varchar
@@ -110,7 +96,7 @@ sources:
             description: ""
 
       - name: dim_event_type
-        description: ""
+        description: "Tabla de dimensiones de los tipos de eventos"
         columns:
           - name: event_type_id
             data_type: varchar
@@ -125,7 +111,7 @@ sources:
               - not_null
 
       - name: dim_products
-        description: ""
+        description: "Tabla de dimensiones de los productos que contiene todos los valores relacionados con dichos productos"
         columns:
           - name: product_id
             data_type: varchar
@@ -154,7 +140,7 @@ sources:
             description: ""
 
       - name: dim_promos
-        description: ""
+        description: "Tabla de dimensiones de las promociones de una order"
         columns:
           - name: promo_id
             data_type: varchar
@@ -182,7 +168,7 @@ sources:
             description: ""
 
       - name: dim_shipping
-        description: ""
+        description: "Tabla de dimensiones de las compañias de envíos que contiene todos los valores relacionados con dichas compañias"
         columns:
           - name: shipping_service_id
             data_type: varchar
@@ -215,7 +201,7 @@ sources:
               - positive_values
 
       - name: dim_users
-        description: ""
+        description: "Tabla de dimensiones de usuarios que contiene todos los valores relacionados con el user"
         columns:
           - name: user_id_key
             data_type: varchar
@@ -287,7 +273,7 @@ sources:
             description: ""
 
       - name: dim_status
-        description: ""
+        description: "Tabla de dimensiones de status del order"
         columns:
           - name: status_id
             data_type: varchar
@@ -300,7 +286,7 @@ sources:
             description: "Descricipción del estado"
 
       - name: fact_events
-        description: ""
+        description: "Tabla de hechos eventos"
         columns:
           - name: event_id
             data_type: varchar
@@ -359,11 +345,19 @@ sources:
 
    
       - name: fact_order_items
-        description: ""
+        description: "Tabla de hechos de order, se ha unificado con la tabla orders bajando el grano"
         columns:
           - name: order_items_id
             data_type: varchar
             description: "Identificador único de la order con un producto específico"
+          - name: sellers_id
+            data_type: varchar
+            description: "Identificador único de un vendedor"  
+            tests:
+               - not_null
+               - relationships:
+                  to: ref('dim_sellers')
+                  field: sellers_id
           - name: order_id
             data_type: varchar
             description: "Identificador de la order general para un determinado producto"
@@ -490,26 +484,96 @@ sources:
             data_type: timestamp_tz
             description: ""
 
-
       - name: fact_budget
-        description: ""
+        description: "Tabla de hechos de budget"
         columns:
           - name: budget_id
+            data_type: varchar
+            description: "Identificador único para un tipo de budget"
             tests:
               - not_null
               - unique
           - name: product_id
+            data_type: varchar
+            description: "Identificador único para un tipo de producto"
             tests:
               - not_null
               - relationships:
                   to: ref('dim_product')
                   field: product_id
           - name: quantity
+            data_type: varchar
+            description: "Cantidad de un budget"
             tests:
               - positive_values
           - name: date
+            data_type: timestamp_tz
+            description: "Fecha de la budget"
             tests:
               - not_null
           - name: date_load
             tests:
               - not_null
+
+      - name: dim_sellers
+        description: "Tabla que contiene la información de un vendedor"
+        columns:
+          - name: sellers_id
+            data_type: varchar
+            description: "Identificador único del vendedor"
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+            data_type: varchar
+            description: "Nombre del vendedor"
+            tests:
+              - not_null
+          - name: last_name
+            data_type: varchar
+            description: "Apellido del vendedor"
+            tests:
+              - not_null
+          - name: salary
+            data_type: number
+            description: "Valor del salario del vendedor"
+            tests:
+              - not_null
+              - positive_values
+          - name: commission
+            data_type: number
+            description: "Valor del porcentaje de comision que se lleva el vendedor por cada venta es un tipo entero"
+            tests:
+              - not_null
+              - positive_values
+          - name: address_id
+            data_type: varchar
+            description: "Identificador único de la address del vendedor"
+            tests:
+              - not_null
+          - name: contract_start_date_at_date
+            data_type: timestamp_tz
+            description: "Fecha de inicio de contrato en dia-mes-año del vendedor"
+            tests:
+              - not_null
+          - name: contract_start_date_at_time_utc
+            data_type: timestamp_tz
+            description: "Fecha de inicio de contrato en horas-minutos-segundos del vendedor"
+            tests:
+              - not_null
+          - name: contract_end_date_at_date
+            data_type: timestamp_tz
+            description: "Fecha de fin del contrato en dias-mes-año del vendedor"
+            tests:
+              - not_null
+          - name: contract_end_date_at_time_utc
+            data_type: timestamp_tz
+            description: "Fecha de fin del contrato en horas-minutos-segundos del vendedor"
+            tests:
+              - not_null
+          - name: date_load
+            data_type: timestamp_tz
+            tests:
+              - not_null
+
+

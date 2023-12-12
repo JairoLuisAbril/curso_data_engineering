@@ -1,14 +1,16 @@
 {{
   config(
-    materialized='view'
+    materialized='incremental',
+    unique_key='order_id',
   )
 }}
 
 WITH src_orders AS (
     SELECT
           order_id
+        , {{ dbt_utils.generate_surrogate_key(['sellers_id']) }} AS sellers_id
         , user_id
-        , address_id
+        , {{ dbt_utils.generate_surrogate_key(['address_id'])}} AS address_id
         , CASE
             WHEN status = 'preparing' THEN 'undefined'
             ELSE COALESCE(tracking_id, 'undefined')
@@ -34,17 +36,24 @@ WITH src_orders AS (
             'Digitized', 'digitized',
             '', 'no promotion'
           ) AS promo_id
-        , shipping_cost::float AS shipping_cost_usd
-        , order_cost::float AS order_cost_usd
-        , order_total::float AS order_total_usd
+        , shipping_cost::decimal(7,2) AS shipping_cost_usd
+        , order_cost::decimal(7,2) AS order_cost_usd
+        , order_total::decimal(7,2) AS order_total_usd
         , _fivetran_synced AS date_load
 
     FROM {{ source('sql_server_dbo', 'orders') }}
+
+    {% if is_incremental() %}
+
+	  where _fivetran_synced > (select max(date_load) from {{ this }})
+
+    {% endif %}
 ),
 
 renamed_casted AS (
     SELECT
-        order_id
+          order_id
+        , sellers_id
         , user_id
         , address_id
         , tracking_id
@@ -64,7 +73,7 @@ renamed_casted AS (
         , order_total_usd
         , date_load
 
-    FROM src_orders  order by order_id
+    FROM src_orders  
 
 )
 
