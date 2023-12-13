@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: finance
+    description: "Modelo de datos financieros de los vendedores"
+    columns:
+      - name: sellers_id
+        data_type: varchar
+        description: "Identificador único del vendedor"
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        data_type: varchar
+        description: "Nombre del vendedor"
+        tests:
+          - not_null
+
+      - name: last_name
+        data_type: varchar
+        description: "Apellido del vendedor"
+        tests:
+          - not_null
+
+      - name: total_order_sellers
+        data_type: number
+        description: "Número de ventas totales hasta el momento"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: total_sales_sellers
+        data_type: varchar
+        description: "Cuantía total de ventashasta el momento"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: commission_prc
+        data_type: varchar
+        description: "Valor de la comisión del vendedor (se representa de tipo entero aunque indica el porcentaje)"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: total_benefits_commission
+        data_type: number
+        description: "Cuantía total de beneficio para el vendedor con respecto de sus ventas"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: current_salary
+        data_type: number
+        description: "Salario actual del vendedor"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: date
+        tests:
+          - not_null
