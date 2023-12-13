@@ -13,7 +13,7 @@ WITH stg_order_items AS
 (
     SELECT *
     FROM {{ ref("stg_order_items") }}
-    WHERE date_load = (select max(date_load) from {{ ref('stg_order_items') }})   -- se hace la snapshot incremental
+    --WHERE date_load = (select max(date_load) from {{ ref('stg_order_items') }})   -- se hace la snapshot incremental
 
 ),
 
@@ -30,7 +30,7 @@ stg_orders AS
 (
     SELECT *
     FROM {{ ref("stg_orders") }}
-    WHERE date_load = (select max(date_load) from {{ ref('stg_orders') }})   -- se hace la snapshot incremental
+    --WHERE date_load = (select max(date_load) from {{ ref('stg_orders') }})   -- se hace la snapshot incremental
 
 ),
 
